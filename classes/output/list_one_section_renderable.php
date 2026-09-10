@@ -30,8 +30,8 @@ use templatable;
 use stdClass;
 use html_writer;
 use context_course;
-
-require_once($CFG->dirroot.'/course/format/renderer.php');
+use core_completion\progress;
+// require_once($CFG->dirroot.'/course/format/renderer.php');
 require_once($CFG->dirroot.'/course/format/remuiformat/classes/mod_stats.php');
 require_once($CFG->dirroot.'/course/format/remuiformat/lib.php');
 
@@ -76,6 +76,12 @@ class format_remuiformat_list_one_section implements renderable, templatable {
     private $displaysection;
 
     /**
+     * Course format data common trait class object
+     * @var course_format_data_common_trait
+     */
+    private $courseformatdatacommontrait;
+
+    /**
      * Constructor
      * @param object          $course         Course object
      * @param int             $displaysection Current section
@@ -87,6 +93,7 @@ class format_remuiformat_list_one_section implements renderable, templatable {
         $this->course = $this->courseformat->get_course();
         $this->courserenderer = $renderer;
         $this->modstats = \format_remuiformat\ModStats::getinstance();
+        $this->courseformatdatacommontrait = \format_remuiformat\course_format_data_common_trait::getinstance();
         $this->settings = $this->courseformat->get_settings();
     }
 
@@ -98,12 +105,14 @@ class format_remuiformat_list_one_section implements renderable, templatable {
      * @return stdClass|array
      */
     public function export_for_template(renderer_base $output) {
-        global $PAGE, $CFG;
+        global $PAGE, $USER, $CFG;
         unset($output);
         $export = new \stdClass();
         $modinfo = get_fast_modinfo($this->course);
+        $context = context_course::instance($this->course->id);
         $sections = $modinfo->get_section_info_all();
         $renderer = $PAGE->get_renderer('format_remuiformat');
+        $format = course_get_format($this->course);
 
         $export->section = $this->displaysection;
         $export->theme = $PAGE->theme->name;
@@ -125,33 +134,79 @@ class format_remuiformat_list_one_section implements renderable, templatable {
             // Can't view this section.
             return $export;
         }
+
+        // The requested section page.
+        $section = $modinfo->get_section_info($this->displaysection);
+
+        if ($format->is_section_current($section)) {
+            $export->iscurrent = true;
+            $export->highlightedlabel = get_string('highlighted');
+        }
+
+        if (!$section->visible) {
+            $export->notavailable = true;
+            if (has_capability('moodle/course:viewhiddensections', $context, $USER)) {
+                $export->hiddenfromstudents = true;
+                $export->notavailable = false;
+            }
+        }
+
         if ($PAGE->user_is_editing()) {
             $export->editing = 1;
+            $export->optionmenu = $this->courseformatdatacommontrait->course_section_controlmenu($this->course, $section);
         }
-        // The requested section page.
-        $currentsection = $modinfo->get_section_info($this->displaysection);
+
+        $singlepageurl = $this->courseformat->get_view_url($sectioninfo->section)->out(true);
+
+        // New menu option.
+        $export->optionmenu = $this->courseformatdatacommontrait->course_section_controlmenu($this->course, $section);
+        $extradetails = $this->courseformatdatacommontrait->get_section_module_info($section, $this->course, null, $singlepageurl);
+        $export->progressinfo = $extradetails['progressinfo'];
+
         // Title with section navigation links.
-        $sectionnavlinks = $renderer->get_nav_links($this->course, $modinfo->get_section_info_all(), $this->displaysection);
+
+        $allsectinswithoutdelegated = $modinfo->get_section_info_all();
+        if ($CFG->branch >= '405') {
+            $allsectinswithoutdelegated = $modinfo->get_listed_section_info_all();
+        }
+
+        if ($CFG->branch >= '405' && $section->component === "mod_subsection") {
+            $sectionnavlinks = array('previous' => '', 'next' => '');
+        } else {
+            $sectionnavlinks = $renderer->get_nav_links($this->course, $allsectinswithoutdelegated, $this->displaysection);
+        }
+
         $export->leftnav = $sectionnavlinks['previous'];
         $export->rightnav = $sectionnavlinks['next'];
-        $export->leftside = $renderer->section_left_content($currentsection, $this->course, false);
-        $export->optionmenu = $renderer->section_right_content($currentsection, $this->course, false);
+        $export->leftside = $renderer->section_left_content($section, $this->course, false);
 
         // Title.
-        $sectionname = $renderer->section_title_without_link($currentsection, $this->course);
+        $sectionname = $renderer->section_title_without_link($section, $this->course);
         $export->title = $sectionname;
-        if (!empty($currentsection->summary)) {
-            $export->summary = $renderer->format_summary_text($currentsection);
+        if (!empty($section->summary)) {
+            $export->summary = $renderer->format_summary_text($section);
         }
 
         // Get the details of the activities.
         $export->remuicourseformatlist = true;
-        $export->activities = $this->courserenderer->course_section_cm_list(
-                $this->course, $currentsection, $this->displaysection
+        $export->activities = $this->courseformatdatacommontrait->course_section_cm_list(
+            $this->course, $section);
+        if ($CFG->branch >= 501) {
+            $format = course_get_format($this->course);
+            $sectioninfo = $format->get_section($this->displaysection);
+
+            $export->activities .= $this->courserenderer->section_add_cm_controls(
+                $format,
+                $sectioninfo
             );
-        $export->activities .= $this->courserenderer->course_section_add_cm_control(
-            $this->course, $this->displaysection, $this->displaysection
-        );
+        } else {
+            $export->activities .= $this->courserenderer->course_section_add_cm_control(
+                $this->course,
+                $this->displaysection,
+                $this->displaysection
+            );
+        }
+
         $export->courseid = $this->course->id;
         $export->sections = [];
         foreach ($sections as $index => $sectioninfo) {
@@ -163,6 +218,24 @@ class format_remuiformat_list_one_section implements renderable, templatable {
             $section->name = $this->courseformat->get_section_name($section->index);
             $export->sections[] = $section;
         }
+                 // Get course image if added.
+                 $coursecontext = context_course::instance($this->course->id);
+                 $imgurl = $this->courseformatdatacommontrait->display_file(
+                 $coursecontext,
+                 $this->settings['remuicourseimage_filemanager']
+                 );
+        if (empty($imgurl)) {
+            $imgurl = $this->courseformatdatacommontrait->get_dummy_image_for_id($this->course->id);
+        }
+        $export->resumeactivityurl = $this->courseformatdatacommontrait->get_activity_to_resume($this->course);
+        $export->headerdata = get_extra_header_context(
+            $export,
+            $this->course,
+            progress::get_course_progress_percentage($this->course),
+            $imgurl
+        );
+        $export->hiddenmessage = $this->courseformatdatacommontrait->course_section_availability($this->course, $modinfo->get_section_info($this->displaysection));
+
         $PAGE->requires->js_call_amd('format_remuiformat/format_list', 'init');
         return $export;
     }

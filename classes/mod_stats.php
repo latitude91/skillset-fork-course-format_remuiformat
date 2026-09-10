@@ -23,8 +23,6 @@
 
 namespace format_remuiformat;
 
-defined('MOODLE_INTERNAL') || die;
-
 use html_writer;
 
 /**
@@ -42,7 +40,7 @@ class ModStats {
      * Plugin config
      * @var string
      */
-    private $_plugin_config;
+    private $plugin_config;
 
     /**
      * Private constructor
@@ -71,7 +69,7 @@ class ModStats {
     public function get_formatted_summary($summary, $settings) {
         $output = '';
         $summarylength = $settings['sectiontitlesummarymaxlength'];
-        $summary = strip_tags($summary);
+        $summary = $summary;
         if ($summary) {
             $end = "";
             if (strlen($summary) > $summarylength) {

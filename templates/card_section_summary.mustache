@@ -50,80 +50,90 @@
 }}
 
 {{#addsection}}
-<li id="{{divid}}" class="col-lg-4 col-md-6 col-sm-6 d-inline-flex single-card-container">
+<li id="{{divid}}" class=" col-lg-4 col-md-6 col-sm-6 section main clearfix">
     <div class="single-card d-flex align-items-center">
         {{#numsections}}
-            <a href="{{{addurl}}}" class="{{addurlclass}}">{{{addicon}}} {{{straddsection}}}</a>
+        <a href="{{{addurl}}}" class="{{addurlclass}}">{{{addicon}}} {{{straddsection}}}</a>
 
-            {{#strremovesection}}
-            <a href="{{{removeurl}}}" class="{{removeurlclass}}">{{{removeicon}}} {{{strremovesection}}}</a>
-            {{/strremovesection}}
+        {{#strremovesection}}
+        <a href="{{{removeurl}}}" class="{{removeurlclass}}">{{{removeicon}}} {{{strremovesection}}}</a>
+        {{/strremovesection}}
         {{/numsections}}
 
         {{^numsections}}
-            <a href="{{{url}}}" data-add-sections="{{{straddsections}}}">{{{icon}}} {{{straddsections}}}</a>
+        <a href="{{{url}}}" data-add-sections="{{{straddsections}}}">{{{icon}}} {{{straddsections}}}</a>
         {{/numsections}}
     </div>
 </li>
 {{/addsection}}
 
 {{^addsection}}
-<li class="col-lg-4 col-md-6 col-sm-6 d-inline-flex section" id="section-{{{index}}}" aria-labelledby="section-{{{index}}} .content .sectionname">
-    <div class="single-card {{{remuinewthemecolor}}} {{#sectionfirstimage}}sectionfirstimage{{/sectionfirstimage}}"
-        style="background: linear-gradient({{remuidefaultsectionoverlay}}, {{remuidefaultsectionoverlay}}), {{sectionfirstimage}};
+<li id="section-{{{index}}}" class="section main clearfix {{#isdelegatedsection}}delegated-section {{/isdelegatedsection}}" aria-labelledby="section-{{{index}}} .content .sectionname  {{#isdelegatedsection}}delegated-section {{/isdelegatedsection}}"
+    data-sectionid="{{id}}" data-sectionreturnid="{{sectionreturnid}}" data-for="section" data-number="{{num}}">
+    <div class="single-card d-flex flex-column justify-content-between {{{remuinewthemecolor}}} {{#sectionfirstimage}}sectionfirstimage{{/sectionfirstimage}}"
+        {{#sectionfirstimage}}style="background: linear-gradient({{remuidefaultsectionoverlay}}),url({{sectionfirstimage}});
                 background-repeat: no-repeat;
-                background-size: cover;";>
-        {{#highlighted}}<div class="highlight text-primary"></div>{{/highlighted}}
-        <div class="left side float-left mt-0">
-            {{{ leftside }}}
-        </div>
-        <div class='right side float-right mt-0'>
-            {{{ addnewsection }}}
-            {{{ optionmenu }}}
-        </div>
-        <div class="content pb-10 pb-2">
-            <div class="summary">
-            </div>
+                background-size: cover;" {{/sectionfirstimage}}>
+        {{#highlighted}}
+        <div class="highlight text-primary"></div>
+        {{/highlighted}}
+        <div class="content ">
+            <div class="summary d-none"></div>
             {{#addnewsection}}
-                <h2 class="sectionname">{{{ title }}}</h2>
+            <h2 class="sectionname m-0 text-clamp text-clamp-3" style="-webkit-box-orient: vertical;">{{{ title }}}</h2>
             {{/addnewsection}}
             {{^addnewsection}}
-                <div class="section-header">
-                    {{^hidden}}
-                        <a href="{{{ singlepageurl }}}">
+            <div class="section-header d-flex flex-column">
+                {{^hidden}}
+                <a href="{{{ singlepageurl }}}" class="align-middle">
                     {{/hidden}}
-                        <h2 class="sectionname">{{{ title }}}</h2>
+                    <h2 class="sectionname m-0 d-inline bg-transparent text-clamp text-clamp-3" style="-webkit-box-orient: vertical;">{{{ title }}}</h2>
+
                     {{^hidden}}
-                        </a>
-                    {{/hidden}}
+                </a>
+                {{/hidden}}
+                <div data-region="sectionbadges" class="sectionbadges d-inline">
+                    {{!> core_courseformat/local/content/section/badges }}
+                    {{>format_remuiformat/edwbadges}}
                 </div>
+            </div>
             {{/addnewsection}}
+            {{#summary }}
             <div class="wdm-section-summary {{#hidden}}summary-muted{{/hidden}}">
                 {{{ summary }}}
             </div>
-            <div class="section-activities-summary">
-                {{#activityinfo}}
-                    <span class="item {{#hidden}}text-muted{{/hidden}}">{{ . }}</span>
-                {{/activityinfo}}
-            </div>
-            {{{ hiddenmessage }}}
+            {{/summary }}
+
             {{#editsectionurl}}
-                <a class="text-muted" href="{{ editsectionurl }}"><span><i class="fa fa-cog font-size-20 mb-5" aria-hidden="true"></i></span></a>
+            <a class="text-muted" href="{{ editsectionurl }}"><span><i class="fa fa-cog font-size-20 "
+                        aria-hidden="true"></i></span></a>
             {{/editsectionurl}}
+            {{#hiddenmessage}}
+                {{{hiddenmessage}}}
+            {{/hiddenmessage}}
         </div>
-        <div class="section-action-container card-bottom d-flex {{^hidden}}text-primary{{/hidden}}{{#hidden}}text-muted{{/hidden}}">
-            {{#progressinfo}}
-                <div class="progress progress-xs bg-grey-300 m-b-1">
-                    <div class="progress-bar bg-green-600" style="width: {{ percentage }}%;" role="progressbar">
+        {{#progressinfo}}
+            <div class="section-action-container  progress-bar-warpper card-bottom d-flex {{^hidden}}text-primary{{/hidden}}{{#hidden}}text-muted{{/hidden}}">
+
+                {{#percentage}}
+                <div class="progress progress-xs bg-grey-300 w-100">
+                    <div class="progress-bar bg-green-600"
+                        style="width: {{#progressinfo}}{{{percentage}}}{{/progressinfo}}{{^progressinfo}}0{{/progressinfo}}%;"
+                        role="progressbar">
                     </div>
                 </div>
-            {{/progressinfo}}
-            <div class="text-right progress-text">
-                {{#progressinfo}}
-                    {{{ progress }}}
-                {{/progressinfo}}
+                <div class=" progress-text w-100">
+                    {{! progress }}
+                    <span>{{#progressinfo}}{{{percentage}}}{{/progressinfo}}{{^progressinfo}}0{{/progressinfo}}% {{#str}} Complete, format_remuiformat {{/str}}
+                    </span>
+                </div>
+                {{/percentage}}
+                {{^percentage}}
+                    {{{progress}}}
+                {{/percentage}}
+
             </div>
-        </div>
+        {{/progressinfo}}
     </div>
 </li>
 {{/addsection}}

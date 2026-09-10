@@ -39,64 +39,94 @@
     }
 }}
 
-{{#addsection}}
-<li id="{{divid}}" class="card clearfix mb-4 m-b-2" role="region" style="">
-   <div class="content card-block px-15 px-3 py-10 py-2 remui-list-content-border d-flex align-items-center">
-      {{#numsections}}
-         <a href="{{{addurl}}}" class="{{addurlclass}}">{{{addicon}}} {{{straddsection}}}</a>
-
-         {{#strremovesection}}
-         <a href="{{{removeurl}}}" class="{{removeurlclass}}">{{{removeicon}}} {{{strremovesection}}}</a>
-         {{/strremovesection}}
-      {{/numsections}}
-
-      {{^numsections}}
-         <a href="{{{url}}}" data-add-sections="{{{straddsections}}}">{{{icon}}} {{{straddsections}}}</a>
-      {{/numsections}}
-   </div>
-</li>
-{{/addsection}}
-
-{{^addsection}}
-<li id="section-{{{index}}}" class="card section clearfix mb-4" role="region" aria-labelledby="section-{{index}} .sectionname a:not(.quickeditlink)">
-   <div class="content card-block px-15 py-15 py-3 px-3 remui-list-content-border" aria-labelledby="section-{{index}} .sectionname a:not(.quickeditlink)">
-      {{#highlighted}}<div class="highlight bg-primary"></div>{{/highlighted}}
-      <div class="d-block">
-        <div class="left side float-left">
-          {{{ leftside }}}
-        </div>
-         <div class="right side float-right d-flex">
-           {{{ addnewsection }}}
-           {{{ optionmenu }}}
-         </div>
-         {{{leftside}}}
-      </div>
-      <h4 class="sectionname card-title">
-         {{#editing}}
-            {{{ title }}}
-         {{/editing}}
-         {{^editing}}
-            <a class="panel-title p-0" href="{{{ singlepageurl }}}" aria-expanded="{{#collapsed}}false{{/collapsed}}{{#expanded}}true{{/expanded}}" aria-controls="sectionwrapper-{{{index}}}">{{{ title }}}
-            {{#progressinfo}}
-               {{#completed}}
+<li id="section-{{{index}}}" class="card section {{#isdelegatedsection}}delegated-section{{/isdelegatedsection}} {{#islistsummarysection}}list-summary-section{{/islistsummarysection}} clearfix " role="region"
+   aria-labelledby="section-{{index}} .sectionname a:not(.quickeditlink)">
+   <div class="content card-block  remui-list-content-border"
+      aria-labelledby="section-{{index}} .sectionname a:not(.quickeditlink)">
+      <div class="course-section-header d-flex flex-column" data-for="section_title">
+         <div class="left side erf-float-left d-flex m-0 justify-content-between w-100">
+            {{{ leftside }}}
+            <h3 class="sectionname card-title m-0 d-inline">
+               <a class="panel-title p-0 sectionheading text-break" href="{{{ singlepageurl }}}"
+                  aria-expanded="{{#collapsed}}false{{/collapsed}}{{#expanded}}true{{/expanded}}"
+                  aria-controls="sectionwrapper-{{{index}}}">{{{ title }}}
+                  {{#progressinfo}}
+                  {{#completed}}
                   <!-- Default checked -->
-                  <div class="float-right">
+                  <div class="erf-float-right">
                      <i class="fa fas fa-check-square text-success"></i>
                      <!-- {{{ progress }}} -->
                   </div>
-               {{/completed}}
+                  {{/completed}}
+                  {{/progressinfo}}
+               </a>
+               <div data-region="sectionbadges" class="sectionbadges erf-ml-2 d-inline">
+                  {{!> core_courseformat/local/content/section/badges }}
+                  {{>format_remuiformat/edwbadges}}
+               </div>
+            </h3>
+            {{#showsectionpageurlbtn}}
+             {{! previously it was sectionpageurl changed to singlepageurl }}
+               <a href="{{{singlepageurl}}}" class="btn btn-icon section_goto d-flex align-items-center justify-content-center icon-no-margin" title="{{#str}}gotosection, course, {{title}}{{/str}}">
+                        <span class="dir-rtl-hide">
+                           {{#pix}}t/right, moodle{{/pix}}
+                        </span>
+                        <span class="dir-ltr-hide">
+                           {{#pix}}t/left, moodle, {{#str}}gotosection, course, {{title}}{{/str}}{{/pix}}
+                        </span>
+                        <span class="sr-only">
+                           {{#str}}gotosection, course, {{title}}{{/str}}
+                        </span>
+               </a>
+            {{/showsectionpageurlbtn}}
+         </div>
+
+         {{#checkrightsidecontent}}
+         <div class="right side erf-float-right d-flex align-items-center">
+            {{#progressinfo}}
+            <div class="progress-bar-warpper">
+               <div class="progress progress-xs bg-grey-300 m-b-1">
+                  <div class="progress-bar bg-green-600"
+                     style="width:{{#progressinfo}}{{ percentage }}{{/progressinfo}}{{^progressinfo}}0{{/progressinfo}}%;"
+                     role="progressbar">
+                  </div>
+               </div>
+               <div class="erf-text-right progress-text">
+                  {{#progressinfo}}
+                  {{! progress }}
+                  {{/progressinfo}}
+                  <span>{{#progressinfo}}{{ percentage }}{{/progressinfo}}{{^progressinfo}}0{{/progressinfo}}%
+                  <!--   {{#str}} Complete, format_remuiformat {{/str}} -->
+                  </span>
+               </div>
+            </div>
             {{/progressinfo}}
-            </a>
-         {{/editing}}
-      </h4>
-      {{{ hiddenmessage }}}
-      <div class="summary card-text {{#expanded}}hide{{/expanded}}">{{{summary}}}</div>
-      {{#availability}}
-      <div class="section_availability badge badge-pill badge-info mb-10">
-        {{{availability}}}
+            {{#editing}}
+            <div class="d-flex">
+               {{{ addnewsection }}}
+               {{{ optionmenu }}}
+            </div>
+            {{/editing}}
+         </div>
+         {{/checkrightsidecontent}}
       </div>
-      {{/availability}}
-      <div class="section-summary-activities mdl-right {{#expanded}}hide{{/expanded}}">{{{activityinfostring}}}</div>
+      <div class="availability-summary-wrapper">
+         {{#hiddenmessage}}
+            <div class="section_availability">
+               {{{ hiddenmessage }}}
+            </div>
+         {{/hiddenmessage}}
+         {{#summary}}
+            <div class="summary card-text {{#expanded}}hide{{/expanded}}"> {{{summary}}}</div>
+         {{/summary}}
+         {{#availability}}
+            <div class="section_availability badge badge-pill badge-info mb-10">
+               {{{availability}}}
+            </div>
+         {{/availability}}
+          {{#editing}}
+            <div class="section-summary-activities erf-text-left {{#expanded}}hide{{/expanded}} p-24">{{{activityinfostring}}}</div>
+          {{/editing}}
+      </div>
    </div>
 </li>
-{{/addsection}}

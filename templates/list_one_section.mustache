@@ -67,51 +67,111 @@
     {{{ hiddensection }}}
 {{/hiddensection}}
 {{^hiddensection}}
-    <div id="list-container" class="remui-format-list one-section-format mt-20">
-        <ul class="sections p-15 py-2 px-2 p-y-1 p-x-1">
-            <li id="section-{{section}}" class="section" aria-labelledby="section-{{section}} .content .summary .title">
-                <div class="right side">
-                    {{{ optionmenu }}}
-                </div>
-                <h2 class="section-title">
-                    <span class="sno {{^hidden}}text-primary{{/hidden}}{{#hidden}}text-muted{{/hidden}}">
-                        {{ section }}&#46;
-                    </span>
-                    <span class="title m-0 {{#hidden}}text-muted{{/hidden}}">{{{ title }}}</span>
-                </h2>
-                {{{ summary}}}
-                <div class="content">
-                    <div class="summary">
-                    </div>
-                    <div class="activities-list">
-                        {{{ activities }}}
-                    </div>
-                </div>
-                {{{ addnewactivity }}}
-            </li>
-            {{#sections}}
-            <li id="section-{{index}}" class="section hide">
-                <div class="content">
-                    <div class="sectionname">
-                        <h2>
-                            {{name}}
+<div id="list-container" class="remui-format-list one-section-format ">
+    {{#headerdata}}
+    {{>format_remuiformat/optional_secheader}}
+    {{/headerdata}}
+    <ul class="sections one-section-format-details-page-wrapper">
+        <li id="section-{{section}}" class="section" aria-labelledby="section-{{section}} .content .summary .title">
+            <div class="course-section-summary-wrapper d-flex flex-column">
+                <div class="course-section-header d-flex position-relative dropready draggable" data-for="section_title"
+                    data-id="7" data-number="1" draggable="true" id="yui_3_17_2_1_1643968975008_225">
+                    <div class="d-flex header-progresbar-wrapper">
+                        <h2 class="section-title m-0 sectionheading d-inline">
+                            {{! sno is shown on section page but now it's hidden because of subsection makes it confusing }}
+                            {{#comment}}
+                                <span class="sno {{^hidden}}{{/hidden}} {{#hidden}}text-muted{{/hidden}}">
+                                    {{ section }}.
+                                </span>
+                            {{/comment}}
+                            <span class="title m-0 {{#hidden}}text-muted{{/hidden}}">{{{ title }}}</span>
+                            <div data-region="sectionbadges" class="sectionbadges d-inline {{^editing}}erf-ml-2{{/editing}}">
+                                {{!> core_courseformat/local/content/section/badges }}
+                                {{>format_remuiformat/edwbadges}}
+                            </div>
                         </h2>
+                        {{#progressinfo}}
+                        <div class="d-flex">
+                            <div class="progress-bar-warpper">
+                                <div class="progress progress-xs bg-grey-300 m-b-1">
+                                    <div class="progress-bar bg-green-600"
+                                        style="width:{{#progressinfo}}{{ percentage }}{{/progressinfo}}{{^progressinfo}}0{{/progressinfo}}%;"
+                                        role="progressbar">
+                                    </div>
+                                </div>
+                                <div class="erf-text-right progress-text">
+                                    {{#progressinfo}}
+                                    {{! progress }}
+                                    {{/progressinfo}}
+                                    <span>{{#progressinfo}}{{ percentage
+                                        }}{{/progressinfo}}{{^progressinfo}}0{{/progressinfo}}%</span>
+                                </div>
+                            </div>
+                        </div>
+                        {{/progressinfo}}
                     </div>
-                    <div class="summary">
-
+                    <div class="d-flex justify-content-between align-items-start flex-gap-16">
+                        <!-- next/prev sections -->
+                        <div class="d-flex no-wrap flex-gap-8">
+                            <div class=" p-0 wdm-card-section m-0 text-nowrap align-items-center">
+                                {{#leftnav}}
+                                    <div class="card-section-leftnav">
+                                        {{{ leftnav }}}
+                                    </div>
+                                {{/leftnav}}
+                                {{#rightnav}}
+                                    <div class="card-section-rightnav">
+                                        {{{ rightnav }}}
+                                    </div>
+                                {{/rightnav}}
+                            </div>
+                            {{#editing}}
+                            <div class="right side mt-0">
+                                {{{ optionmenu }}}
+                            </div>
+                            {{/editing}}
+                        </div>
                     </div>
                 </div>
-            </li>
-            {{/sections}}
-        </ul>
+            {{{ summary }}}
+            {{#hiddenmessage}}
+                <div class="section_availability">
+                    {{{ hiddenmessage }}}
+                </div>
+            {{/hiddenmessage}}
+            
+            </div>
+            <div class="content">
+                {{! <div class="summary">
+                </div> }}
+                <div class="activities-list">
+                    {{{ activities }}}
+                </div>
+            </div>
+            {{{ addnewactivity }}}
+        </li>
+        {{#sections}}
+        <li id="section-{{index}}" class="section hide">
+            <div class="content">
+                <div class="sectionname">
+                    <h2>
+                        {{name}}
+                    </h2>
+                </div>
+                <div class="summary">
+
+                </div>
+            </div>
+        </li>
+        {{/sections}}
+    </ul>
+</div>
+<!-- next/prev sections -->
+<div class="col-md-12 p-0 wdm-card-section m-t-2">
+    <div class="card-section-leftnav">
+        {{{ leftnav }}}
     </div>
-    <!-- next/prev sections -->
-    <div class="col-md-12 p-0 wdm-card-section m-t-2">
-        <div class="card-section-leftnav">
-            {{{ leftnav }}}
-        </div>
-        <div class="card-section-rightnav">
-            {{{ rightnav }}}
-        </div>
+    <div class="card-section-rightnav">
+        {{{ rightnav }}}
     </div>
 {{/hiddensection}}
