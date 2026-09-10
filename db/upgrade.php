@@ -37,6 +37,8 @@
  * @author     WisdmLabs
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Perform database upgrade
  * @param  int $oldversion Older plugin version
@@ -79,7 +81,7 @@ function xmldb_format_remuiformat_upgrade($oldversion) {
         // Adding fields to table remuiformat_course_module_visits.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('course', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('user', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         $table->add_field('cm', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         $table->add_field('timevisited', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
 
@@ -87,7 +89,7 @@ function xmldb_format_remuiformat_upgrade($oldversion) {
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Adding indexes to table remuiformat_course_module_visits.
-        $table->add_index('remuiformatvisits', XMLDB_INDEX_UNIQUE, ['course', 'userid']);
+        $table->add_index('remuiformatvisits', XMLDB_INDEX_UNIQUE, ['course', 'user']);
 
         // Conditionally launch create table for remuiformat_course_module_visits.
         if (!$dbman->table_exists($table)) {
@@ -96,24 +98,6 @@ function xmldb_format_remuiformat_upgrade($oldversion) {
 
         // Remuiformat savepoint reached.
         upgrade_plugin_savepoint(true, 2021070800, 'format', 'remuiformat');
-    }
-
-    if ($oldversion < 2023021600) {
-        // Course visits table.
-        $table = new xmldb_table('remuiformat_course_visits');
-
-        // Old user field.
-        $field = new xmldb_field('user', XMLDB_TYPE_INTEGER, 10);
-
-        // If field exists then change its name.
-        if ($dbman->field_exists($table, $field)) {
-            $dbman->rename_field($table, $field, 'userid');
-            // $dbman->drop_index($table, new xmldb_index('user'));
-            // $dbman->add_index($table, new xmldb_index('userid'));
-        }
-
-        // Remuiformat savepoint reached.
-        upgrade_plugin_savepoint(true, 2023021600, 'format', 'remuiformat');
     }
 
     return true;

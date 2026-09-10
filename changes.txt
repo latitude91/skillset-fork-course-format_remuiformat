@@ -1,152 +1,9 @@
-CHANGES LOG
-
-Version 4.1.21
-===========
-Feature - Added compatibility with Moodle 5.2.
-Tweak - Minor UI/UX improvements.
-
-Version 4.1.20
-===========
-Tweak - Added a banner highlighting the new video course format offering.
-
-Version 4.1.19
-===========
-Feature - Added compatibility with Moodle 5.1.
-Fix - Resolved minor UI issues.
-
-Version 4.1.18
-===========
-Tweak - Minor UI/UX improvement.
-Fix - Availability condition not displaying when restriction is added in Card Layout.
-Fix - Completion condition not visible in card layout view.	
-
-Version 4.1.17
-=============
-Tweak – Further UI/UX improvements implemented.
-
-Version 4.1.16
-=============
-Fix – Resolved warning occurring on  highlighting the section.
-Tweak – Further UI/UX improvements implemented.
-
-Version 4.1.15
-=============
-Feature - Compatibility with Moodle 5.0.
-
-Version 4.1.14
-=============
-Tweak– Additional UI/UX enhancements.
-
-Version 4.1.13
-=============
-Fix - The issue of the "Add Section" button not being visible has been resolved.
-
-Version 4.1.12
-=============
-Feature - In edit mode  moodle format will be visible for easy editing.
-Tweak - Further UI/UX improvements done in list and card layouts.
-
-Version 4.1.11
-=============
-Fix - Resolved the issue where hidden sections were visible as empty cards to students.
-
-Version 4.1.10
-=============
-Feature - Compatibility with Moodle 4.5.
-
-Version 4.1.9
-=============
-Tweak - Miner improvement in 'Hide general section when empty' setting.
-Fix   - Deprecated warnings in PHP 8.2 and 8.3 have been resolved.
-
-Version 4.1.8
-=============
-Feature - Added language translation files for:
-        - Spanish (Spain) (es)
-        - Deutsch (German) (de)
-        - Spanish (Mexico) (es_mx)
-        - Portuguese (Brazil) (pt_br)
-        - France (fr)
-        - Polish (pl)
-        - Arabic (ar)
-Feature - Teachers of the same group are visible in the course header when the separate group setting is selected
-Tweak - Multi lang filter plugins  support added
-Tweak - Added missing translated string in  lang files.
-Tweak - UI/UX Improvements:
-        - repeatedly "Show" or "Hide" an activity in the course list screen working
-        - Some miner text and UI improvements
-
-
-Version 4.1.7
-=============
-Feature - Compatibility with Moodle 4.4.
-Tweak   - Further UI/UX improvements done
-
-Version 4.1.6
-=============
-Tweak - UI improvement in Course header for teachers information.
-
-Version 4.1.5
-=============
-Tweak - UI improvements:
-        - Optimized the height of section and activity cards.
-        - Removed activity type name for student users
-Tweak - Added activity indentation for list layout
-Fix - Fixed the issue where restriction information was not visible on the section.
-
-Version 4.1.4
-=============
-Feature - Compatibility with Moodle 4.3.
-
-Version 4.1.3
-=============.
-Tweak - UI improvements.
-Fix - Hide general section when empty issue fixed.
-Fix - ellipsis issue in safari browser fixed
-Fix - Upgradation error issue fixed.
-Fix - Missing Lang strings added
-
-
-Version 4.1.2
-=============.
-Tweak - UI improvements in Label activitity.
-Tweak - Multilang support added in header in course page.
-
-Version 4.1.1
-=============
-Fix   - Input field editable text visibility when background image is available on section cards.
-Tweak - Next/Prev button design changes.
-Tweak - Minor design updates on card width of section and activities.
-
-Version 4.1.0
-=============
-
-Feature - Major UI/UX update release.
-Feature - Added new header design for course page.
-Tweak - Updated the course format settings.
-Tweak - Course section, activity card designs updated.
-Fix - Moodle 4.0 compatiblility bugs fixes.
-Fix - Cross db issue with user column.
-Deprecated - Show teacher image setting from course format.
-Deprecated - The existing course card designs are deprecated.
-
-Version 4.0.1
-=============
-Fix - Card Section content not loading issue.
-
-Version 4.0.0
-=============
-
-Moodle 4.0 compatible version of Edwiser course formats.
-
 Version 1.1.1
-=============
 Fixes:
 Folder activity issue with general section of card and list layout.
 Improved display_file function.
 
 Version 1.1.0
-=============
 Feature
 * Added setting to set default course layout
 * Moodle 3.11 compatibility
@@ -164,7 +21,6 @@ Tweak
 * Improved course format image handling
 
 Version 1.0.9
-=============
 Fixes
 * Fixed resource creation using drag and drop.
 * Fixed activity deletion issue with card layout.
@@ -172,7 +28,6 @@ Fixes
 * Fixed remui sidebar issue with Course format.
 
 Version 1.0.8
-=============
 Fixes
 * Removed bootstrap classes from plugin CSS.
 * Students can check section content even if it is restricted.
@@ -190,19 +45,16 @@ Tweak
 * Editing mode is similar for one section and all sections per page of the list layout.
 
 Version 1.0.7
-=============
 Fixes
 * Fixed : Position issue with topic title in List layout in editing mode.
 * Fixed : Position issue with topic title and topic summary in list layout if show all section on one page option is selected in
             non-editing mode.
 
 Version 1.0.6
-=============
 Fixes
 * Fixed : HTML support for section description in card layout.
 
 Version 1.0.5
-=============
 Fixes
 * Fixed : Getting an “Invalid course module ID” error when viewing the main course page in card format.
 * Fixed : JS issues when javascript caching is off in Moodle.
@@ -214,7 +66,6 @@ Features
 * Added Extra code for User Usage Tracking and its Analytics
 
 Version 1.0.4
-=============
 Fixes
 * Fixed issue when course layout resets on course restore.
 * Fixed multi-language support for section/topic summary in card format.
@@ -226,7 +77,6 @@ Tweaks
 * Hide label 'Activities' if no activity exists in general section of card format.
 
 Version 1.0.3
-=============
 Fixes
 * Fixed Drag&Drop Upload Problem in List format.
 
@@ -239,7 +89,6 @@ Features
 * Add new section after specific section in list format.
 
 Version 1.0.2
-=============
 Fixes
 * Switch list to card does not correctly update course layout field.
 
@@ -249,9 +98,7 @@ Features
 * Add new section after specific section in card format.
 
 Version 1.0.1
-=============
 * Initial version released.
 
 Version 0.0.9
-=============
 * Beta version released.

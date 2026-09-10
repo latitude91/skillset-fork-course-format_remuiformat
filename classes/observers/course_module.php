@@ -26,6 +26,8 @@ namespace format_remuiformat\observers;
 
 use stdClass;
 
+defined('MOODLE_INTERNAL') || die();
+
 class course_module {
     /**
      * Course module create event
@@ -50,7 +52,7 @@ class course_module {
         }
 
         // Update cm id if course and user record is present.
-        if ($visit = $DB->get_record('remuiformat_course_visits', array('course' => $courseid, 'userid' => $userid))) {
+        if ($visit = $DB->get_record('remuiformat_course_visits', array('course' => $courseid, 'user' => $userid))) {
             $visit->cm = $cmid;
             $visit->timevisited = time();
             $DB->update_record('remuiformat_course_visits', $visit);
@@ -60,7 +62,7 @@ class course_module {
         // Create new visit record.
         $visit = new stdClass;
         $visit->course = $courseid;
-        $visit->userid = $userid;
+        $visit->user = $userid;
         $visit->cm = $cmid;
         $visit->timevisited = time();
         $DB->insert_record('remuiformat_course_visits', $visit);
