@@ -1,0 +1,1 @@
+Use the moodle-plugin-developer agent and context7 when working with this moodle plugin A full copy of the moodle code for refernece can be found at ~/gitrepos/moodle
