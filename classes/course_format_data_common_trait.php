@@ -409,11 +409,12 @@ class course_format_data_common_trait {
                 'target' => 'course_module',
                 'crud' => 'r',
                 'userid' => $USER->id,
+                'contextlevel' => CONTEXT_MODULE,
                 'courseid' => $course->id,
                 'origin' => 'web'
             ),
             'timecreated desc',
-            '*',
+            'id, contextinstanceid',
             0,
             1
         );
@@ -445,8 +446,20 @@ class course_format_data_common_trait {
 
         // Fetch last viewed from log if not record in remuiformat_course_visits.
         // If no record found in log then return empty string.
+        // Store the result (cm 0 if nothing found) so the log is only queried once per user and course.
         if (empty($lastviewed)) {
             $lastviewed = $this->get_activity_to_resume_from_log($course);
+            $visit = new \stdClass();
+            $visit->course = $course->id;
+            $visit->userid = $USER->id;
+            $visit->cm = $lastviewed === false ? 0 : $lastviewed->cm;
+            $visit->timevisited = time();
+            try {
+                $DB->insert_record('remuiformat_course_visits', $visit);
+            } catch (\dml_write_exception $e) {
+                // Row was inserted concurrently by another request or the observer.
+                debugging($e->getMessage(), DEBUG_DEVELOPER);
+            }
             if ($lastviewed === false) {
                 return '';
             }
