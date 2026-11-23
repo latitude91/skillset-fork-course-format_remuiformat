@@ -455,7 +455,7 @@ class course_format_data_common_trait {
             $visit->cm = $lastviewed === false ? 0 : $lastviewed->cm;
             $visit->timevisited = time();
             try {
-                $DB->insert_record('remuiformat_course_visits', $visit);
+                $DB->insert_record('format_remuiformat_course_visits', $visit);
             } catch (\dml_write_exception $e) {
                 // Row was inserted concurrently by another request or the observer.
                 debugging($e->getMessage(), DEBUG_DEVELOPER);
